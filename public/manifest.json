@@ -1,0 +1,16 @@
+{
+  "name": "AI云养猫",
+  "short_name": "AI云养猫",
+  "description": "使用AI技术创造你的虚拟猫咪伙伴",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2750a",
+  "theme_color": "#f2750a",
+  "icons": [
+    {
+      "src": "/cat-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+} 
