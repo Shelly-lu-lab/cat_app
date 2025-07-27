@@ -16,7 +16,8 @@ class TongyiVideoGenerationService {
   private baseUrl: string;
   
   constructor() {
-    this.apiKey = process.env.REACT_APP_TONGYI_API_KEY || '';
+    // 在浏览器环境中，环境变量通过import.meta.env访问
+    this.apiKey = import.meta.env.VITE_TONGYI_API_KEY || '';
     this.baseUrl = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/image2video/generation';
   }
   
