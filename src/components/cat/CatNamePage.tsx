@@ -85,7 +85,7 @@ export const CatNamePage: React.FC = () => {
   };
 
   const handleRegenerate = () => {
-    navigate('/cat-generator');
+    navigate('/generate');
   };
 
   const handleSuggestedName = (name: string) => {
@@ -100,7 +100,7 @@ export const CatNamePage: React.FC = () => {
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">数据错误</h2>
             <button
-              onClick={() => navigate('/cat-generator')}
+                              onClick={() => navigate('/generate')}
               className="generate-button"
             >
               重新生成猫咪

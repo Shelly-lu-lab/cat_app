@@ -45,12 +45,11 @@ export const UserDashboard: React.FC = () => {
   };
 
   const handleGenerateCat = () => {
-    navigate('/cat-generator');
+    navigate('/generate');
   };
 
   const handleCatInteraction = (cat: CatInfo) => {
-    // TODO: 实现猫咪互动功能
-    console.log('与猫咪互动:', cat.name);
+    navigate(`/interact/${cat.id}`);
   };
 
   const handleViewCatDetails = (cat: CatInfo) => {
@@ -62,7 +61,7 @@ export const UserDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-purple-50 to-pink-50 p-4">
       <div className="max-w-4xl mx-auto">
         {/* 头部 */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
@@ -77,7 +76,7 @@ export const UserDashboard: React.FC = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className="btn-secondary"
+              className="px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-full hover:border-gray-400 transition-all duration-300"
             >
               退出登录
             </button>
@@ -92,7 +91,7 @@ export const UserDashboard: React.FC = () => {
             </h2>
             <button 
               onClick={handleGenerateCat}
-              className="btn-primary"
+              className="bg-gradient-to-r from-orange-500 to-purple-600 text-white px-6 py-3 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               + 领养新猫咪
             </button>
@@ -113,7 +112,7 @@ export const UserDashboard: React.FC = () => {
               </p>
               <button
                 onClick={handleGenerateCat}
-                className="btn-primary"
+                className="bg-gradient-to-r from-orange-500 to-purple-600 text-white px-6 py-3 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 立即领养
               </button>
@@ -121,7 +120,7 @@ export const UserDashboard: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {cats.map((cat) => (
-                <div key={cat.id} className="bg-gray-50 rounded-lg p-4">
+                <div key={cat.id} className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-all duration-300">
                   <img
                     src={cat.imageUrl}
                     alt={cat.name}
@@ -134,13 +133,13 @@ export const UserDashboard: React.FC = () => {
                   <div className="flex space-x-2">
                     <button 
                       onClick={() => handleCatInteraction(cat)}
-                      className="btn-secondary text-sm flex-1"
+                      className="flex-1 px-3 py-2 border-2 border-gray-300 text-gray-700 rounded-full text-sm hover:border-purple-300 hover:text-purple-700 transition-all duration-300"
                     >
                       互动
                     </button>
                     <button 
                       onClick={() => handleViewCatDetails(cat)}
-                      className="btn-primary text-sm flex-1"
+                      className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full text-sm hover:scale-105 transform transition-all duration-300"
                     >
                       查看详情
                     </button>
