@@ -2,18 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 全局样式 */
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #fef3c7 0%, #f3e8ff 50%, #fce7f3 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #fef3c7 0%, #f3e8ff 50%, #fdf2f8 100%);
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-/* 新的设计系统样式 */
+/* 自定义组件样式 */
 .gradient-text {
   @apply bg-gradient-to-r from-orange-500 to-purple-600 bg-clip-text text-transparent;
 }
@@ -23,15 +21,11 @@ body {
 }
 
 .card-hover {
-  @apply transition-all duration-200 hover:scale-105 hover:shadow-xl;
+  @apply hover:shadow-lg hover:scale-105 transition-all duration-300;
 }
 
 .option-card {
-  @apply bg-white rounded-2xl p-6 shadow-lg border-2 transition-all duration-200;
-}
-
-.option-card:hover {
-  @apply border-orange-300 shadow-md;
+  @apply bg-white rounded-2xl p-6 shadow-lg border-2 border-gray-200 hover:border-orange-300 transition-all duration-200;
 }
 
 .option-card.selected {
@@ -39,75 +33,188 @@ body {
 }
 
 .generate-button {
-  @apply bg-gradient-to-r from-orange-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl;
+  @apply bg-gradient-to-r from-orange-500 to-purple-600 text-white px-8 py-4 rounded-full font-medium hover:scale-105 shadow-lg hover:shadow-xl transition-all duration-300;
 }
 
 .generate-button:disabled {
-  @apply bg-gray-300 text-gray-500 cursor-not-allowed scale-100 shadow-none;
+  @apply bg-gray-300 text-gray-500 cursor-not-allowed hover:scale-100 shadow-none;
 }
 
-/* 动画效果 */
+/* 强制下拉菜单样式 */
+select, option, label {
+  font-size: 16px !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  border: 2px solid #e5e7eb !important;
+  background-color: white !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+}
+
+select:focus, option:focus, label:focus {
+  outline: none !important;
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1) !important;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  select, option, label {
+    font-size: 18px !important;
+    padding: 16px 20px !important;
+    min-height: 48px !important;
+  }
+}
+
+/* 自定义动画 */
 @keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
 }
 
 .animate-sparkle {
   animation: sparkle 2s ease-in-out infinite;
 }
 
-/* 强制下拉菜单样式 */
-select {
-  font-size: 18px !important;
-  line-height: 1.5 !important;
-  padding: 16px 20px !important;
-  border: 2px solid #d1d5db !important;
-  border-radius: 8px !important;
-  background-color: white !important;
-  color: #374151 !important;
-  font-weight: 500 !important;
-  min-height: 60px !important;
+/* 进度条动画 */
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-width);
+  }
 }
 
-select:focus {
-  outline: none !important;
-  border-color: #f97316 !important;
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1) !important;
+.progress-fill {
+  animation: progress-fill 1s ease-out forwards;
 }
 
-select option {
-  font-size: 18px !important;
-  line-height: 1.5 !important;
-  padding: 12px 16px !important;
-  background-color: white !important;
-  color: #374151 !important;
-  font-weight: 500 !important;
+/* 按钮悬停效果增强 */
+.btn-hover {
+  @apply transform transition-all duration-300 hover:scale-105 hover:shadow-lg;
 }
 
-/* 标签样式 */
-label {
-  font-size: 18px !important;
-  font-weight: 600 !important;
-  color: #374151 !important;
-  margin-bottom: 12px !important;
-  display: block !important;
+/* 卡片悬停效果 */
+.card-hover-effect {
+  @apply transition-all duration-300 hover:shadow-md hover:shadow-lg;
 }
 
-/* 移动端优化 */
-@media (max-width: 768px) {
-  select {
-    font-size: 20px !important;
-    padding: 20px 24px !important;
-    min-height: 70px !important;
+/* 输入框焦点效果 */
+.input-focus {
+  @apply transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200;
+}
+
+/* 渐变背景增强 */
+.gradient-bg {
+  background: linear-gradient(135deg, #fef3c7 0%, #f3e8ff 50%, #fdf2f8 100%);
+}
+
+/* 加载动画 */
+.loading-spinner {
+  @apply animate-spin rounded-full border-b-2 border-orange-500;
+}
+
+/* 脉冲动画 */
+.pulse-animation {
+  @apply animate-pulse;
+}
+
+/* 弹跳动画 */
+.bounce-animation {
+  @apply animate-bounce;
+}
+
+/* 响应式文本 */
+.text-responsive {
+  @apply text-sm md:text-base lg:text-lg;
+}
+
+/* 响应式间距 */
+.spacing-responsive {
+  @apply p-4 md:p-6 lg:p-8;
+}
+
+/* 响应式网格 */
+.grid-responsive {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+}
+
+/* 触摸友好的按钮 */
+.touch-friendly {
+  @apply min-h-[44px] min-w-[44px];
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 选择文本样式 */
+::selection {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* 焦点可见性 */
+.focus-visible:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* 减少动画（用户偏好） */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .gradient-text {
+    @apply text-orange-600;
   }
   
-  select option {
-    font-size: 20px !important;
-    padding: 16px 20px !important;
+  .glass-effect {
+    @apply bg-white border-2 border-gray-800;
+  }
+}
+
+/* 深色模式支持（如果需要） */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #4c1d95 100%);
+    color: #f9fafb;
   }
   
-  label {
-    font-size: 20px !important;
-    margin-bottom: 16px !important;
+  .glass-effect {
+    @apply bg-gray-800/80 border-gray-600;
+  }
+  
+  .option-card {
+    @apply bg-gray-800 border-gray-600 text-gray-100;
   }
 }
