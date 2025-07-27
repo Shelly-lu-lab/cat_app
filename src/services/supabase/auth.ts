@@ -36,9 +36,6 @@ export const authService = {
       }
       
       if (signInData.user) {
-        // 创建用户记录
-        await this.createUserRecord(signInData.user);
-        
         return {
           id: signInData.user.id,
           email: signInData.user.email!,
@@ -51,9 +48,6 @@ export const authService = {
     if (!data.session) {
       throw new Error('注册成功！请检查邮箱并点击确认链接完成注册。');
     }
-
-    // 创建用户记录
-    await this.createUserRecord(data.user);
 
     return {
       id: data.user.id,
@@ -82,9 +76,6 @@ export const authService = {
     
     if (!data.user) throw new Error('登录失败，未返回用户数据');
 
-    // 确保用户记录存在
-    await this.createUserRecord(data.user);
-
     return {
       id: data.user.id,
       email: data.user.email!,
@@ -105,11 +96,6 @@ export const authService = {
 
       if (!user) return null;
 
-      // 创建用户记录（不阻塞主流程）
-      this.createUserRecord(user).catch(error => {
-        console.error('Failed to create user record:', error);
-      });
-
       return {
         id: user.id,
         email: user.email!,
@@ -125,11 +111,6 @@ export const authService = {
   onAuthStateChange(callback: (user: User | null) => void) {
     return supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        // 创建用户记录（不阻塞主流程）
-        this.createUserRecord(session.user).catch(error => {
-          console.error('Failed to create user record:', error);
-        });
-        
         const user: User = {
           id: session.user.id,
           email: session.user.email!,
@@ -140,34 +121,5 @@ export const authService = {
         callback(null);
       }
     });
-  },
-
-  // 创建用户记录（如果不存在）
-  async createUserRecord(authUser: any): Promise<void> {
-    try {
-      // 添加超时处理
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Database operation timeout')), 5000);
-      });
-
-      const upsertPromise = supabase
-        .from('users')
-        .upsert({
-          id: authUser.id,
-          email: authUser.email
-        }, {
-          onConflict: 'id'
-        });
-
-      const { error } = await Promise.race([upsertPromise, timeoutPromise]) as any;
-      
-      if (error) {
-        console.error('Failed to create user record:', error);
-        // 不抛出错误，因为用户可能已经存在
-      }
-    } catch (error) {
-      console.error('Error creating user record:', error);
-      // 不抛出错误，避免影响登录流程
-    }
   }
 }; 
