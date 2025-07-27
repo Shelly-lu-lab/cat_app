@@ -100,26 +100,35 @@ export const authService = {
 
   // 获取当前用户
   async getCurrentUser(): Promise<User | null> {
-    const { data: { user } } = await supabase.auth.getUser();
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return null;
+      if (!user) return null;
 
-    // 确保用户记录存在
-    await this.createUserRecord(user);
+      // 创建用户记录（不阻塞主流程）
+      this.createUserRecord(user).catch(error => {
+        console.error('Failed to create user record:', error);
+      });
 
-    return {
-      id: user.id,
-      email: user.email!,
-      createdAt: new Date()
-    };
+      return {
+        id: user.id,
+        email: user.email!,
+        createdAt: new Date()
+      };
+    } catch (error) {
+      console.error('Error getting current user:', error);
+      return null;
+    }
   },
 
   // 监听认证状态变化
   onAuthStateChange(callback: (user: User | null) => void) {
     return supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        // 确保用户记录存在
-        await this.createUserRecord(session.user);
+        // 创建用户记录（不阻塞主流程）
+        this.createUserRecord(session.user).catch(error => {
+          console.error('Failed to create user record:', error);
+        });
         
         const user: User = {
           id: session.user.id,
@@ -136,7 +145,12 @@ export const authService = {
   // 创建用户记录（如果不存在）
   async createUserRecord(authUser: any): Promise<void> {
     try {
-      const { error } = await supabase
+      // 添加超时处理
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Database operation timeout')), 5000);
+      });
+
+      const upsertPromise = supabase
         .from('users')
         .upsert({
           id: authUser.id,
@@ -144,6 +158,8 @@ export const authService = {
         }, {
           onConflict: 'id'
         });
+
+      const { error } = await Promise.race([upsertPromise, timeoutPromise]) as any;
       
       if (error) {
         console.error('Failed to create user record:', error);

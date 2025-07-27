@@ -19,7 +19,15 @@ function App() {
     const checkUser = async () => {
       try {
         setLoading(true);
-        const currentUser = await authService.getCurrentUser();
+        
+        // 添加超时处理
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Authentication timeout')), 10000);
+        });
+
+        const userPromise = authService.getCurrentUser();
+        const currentUser = await Promise.race([userPromise, timeoutPromise]) as any;
+        
         setUser(currentUser);
       } catch (error) {
         console.error('Failed to check user session:', error);
