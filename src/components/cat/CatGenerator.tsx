@@ -4,12 +4,13 @@ import { useAppStore } from '../../stores/appStore';
 import { tongyiImageService } from '../../services/ai/tongyi-image';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { ErrorMessage } from '../ui/ErrorMessage';
+import { Header } from '../ui/Header';
 import { CAT_BREEDS, CAT_AGES, CAT_GENDERS } from '../../types';
 import type { CatConfig } from '../../types';
 
 export const CatGenerator: React.FC = () => {
   const navigate = useNavigate();
-  const { setCurrentCat, setLoading, setError, clearError } = useAppStore();
+  const { setCurrentCat, setLoading, setError, clearError, error } = useAppStore();
   
   const [config, setConfig] = useState<CatConfig>({
     breed: 'persian',
@@ -60,90 +61,208 @@ export const CatGenerator: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-100 p-4">
-      <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
-            🐱 生成你的专属猫咪
+    <div className="min-h-screen">
+      <Header />
+      
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        {/* 页面标题区域 */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center items-center mb-6">
+            <div className="w-16 h-16 text-orange-500 relative">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+              </svg>
+              <div className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400 animate-sparkle">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            领养你的专属AI猫咪
           </h1>
           
-          <p className="text-gray-600 text-center mb-6">
-            选择猫咪的特征，AI将为你生成专属的猫咪图片
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            选择你喜欢的猫咪特征，AI将为你生成一只独一无二的虚拟猫咪，从此开始你们的美好时光
           </p>
+        </div>
 
-          <div className="space-y-6">
-            {/* 品种选择 */}
-            <div>
-              <label>品种</label>
-              <select
-                value={config.breed}
-                onChange={(e) => handleConfigChange('breed', e.target.value)}
-              >
-                {CAT_BREEDS.map(breed => (
-                  <option key={breed.value} value={breed.value}>
-                    {breed.emoji} {breed.label}
-                  </option>
-                ))}
-              </select>
+        {/* 错误提示 */}
+        {error && <ErrorMessage error={error} onClose={clearError} />}
+
+        {/* 选择卡片网格 */}
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {/* 品种选择 */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="w-5 h-5 text-orange-500">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold text-gray-800">选择品种</h2>
             </div>
-
-            {/* 年龄选择 */}
-            <div>
-              <label>年龄</label>
-              <select
-                value={config.age}
-                onChange={(e) => handleConfigChange('age', e.target.value)}
-              >
-                {CAT_AGES.map(age => (
-                  <option key={age.value} value={age.value}>
-                    {age.emoji} {age.label}
-                  </option>
-                ))}
-              </select>
+            
+            <div className="space-y-3">
+              {CAT_BREEDS.map(breed => (
+                <button
+                  key={breed.value}
+                  onClick={() => handleConfigChange('breed', breed.value)}
+                  className={`option-card w-full text-left ${
+                    config.breed === breed.value ? 'selected' : 'border-gray-200'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{breed.emoji}</span>
+                    <div>
+                      <div className="font-semibold text-gray-800">{breed.label}</div>
+                      <div className="text-sm text-gray-500 mt-1">
+                        {getBreedDescription(breed.value)}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
-
-            {/* 性别选择 */}
-            <div>
-              <label>性别</label>
-              <select
-                value={config.gender}
-                onChange={(e) => handleConfigChange('gender', e.target.value)}
-              >
-                {CAT_GENDERS.map(gender => (
-                  <option key={gender.value} value={gender.value}>
-                    {gender.emoji} {gender.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* 生成按钮 */}
-            <button
-              onClick={handleGenerate}
-              disabled={isGenerating}
-              className="w-full bg-orange-500 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
-            >
-              {isGenerating ? (
-                <div className="flex items-center justify-center">
-                  <LoadingSpinner size="sm" text="AI正在生成猫咪..." />
-                </div>
-              ) : (
-                '🐱 生成猫咪'
-              )}
-            </button>
           </div>
 
-          {/* 返回按钮 */}
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="text-orange-600 hover:text-orange-700 font-medium"
-            >
-              ← 返回仪表板
-            </button>
+          {/* 年龄选择 */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="w-5 h-5 text-purple-500">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold text-gray-800">选择年龄</h2>
+            </div>
+            
+            <div className="space-y-3">
+              {CAT_AGES.map(age => (
+                <button
+                  key={age.value}
+                  onClick={() => handleConfigChange('age', age.value)}
+                  className={`option-card w-full text-left ${
+                    config.age === age.value ? 'selected' : 'border-gray-200'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{age.emoji}</span>
+                    <div>
+                      <div className="font-semibold text-gray-800">{age.label}</div>
+                      <div className="text-sm text-gray-500 mt-1">
+                        {getAgeDescription(age.value)}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 性别选择 */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="w-5 h-5 text-pink-500">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold text-gray-800">选择性别</h2>
+            </div>
+            
+            <div className="space-y-3">
+              {CAT_GENDERS.map(gender => (
+                <button
+                  key={gender.value}
+                  onClick={() => handleConfigChange('gender', gender.value)}
+                  className={`option-card w-full text-left ${
+                    config.gender === gender.value ? 'selected' : 'border-gray-200'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{gender.emoji}</span>
+                    <div>
+                      <div className="font-semibold text-gray-800">{gender.label}</div>
+                      <div className="text-sm text-gray-500 mt-1">
+                        {getGenderDescription(gender.value)}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+
+        {/* 生成按钮 */}
+        <div className="text-center">
+          <button
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="generate-button"
+          >
+            {isGenerating ? (
+              <div className="flex items-center justify-center space-x-2">
+                <LoadingSpinner size="sm" text="AI正在生成猫咪..." />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <span>生成我的猫咪</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            )}
+          </button>
+          
+          <p className="text-sm text-gray-500 mt-4">
+            请选择猫咪的品种、年龄和性别后开始生成
+          </p>
+        </div>
+
+        {/* 返回按钮 */}
+        <div className="text-center mt-8">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="text-orange-600 hover:text-orange-700 font-medium transition-colors"
+          >
+            ← 返回仪表板
+          </button>
+        </div>
+      </main>
     </div>
   );
-}; 
+};
+
+// 辅助函数
+function getBreedDescription(breed: string): string {
+  const descriptions: Record<string, string> = {
+    'british-shorthair': '温和友善，适合家庭',
+    'american-shorthair': '活泼好动，适应性强',
+    'persian': '优雅高贵，长毛美丽',
+    'siamese': '聪明活泼，爱交流',
+    'maine-coon': '体型较大，性格温顺',
+    'ragdoll': '蓝眼睛，极其亲人'
+  };
+  return descriptions[breed] || '可爱的猫咪品种';
+}
+
+function getAgeDescription(age: string): string {
+  const descriptions: Record<string, string> = {
+    'kitten': '活泼好动，需要更多关爱',
+    'adult': '性格稳定，容易相处',
+    'senior': '温和安静，需要细心照料'
+  };
+  return descriptions[age] || '不同年龄段的猫咪';
+}
+
+function getGenderDescription(gender: string): string {
+  const descriptions: Record<string, string> = {
+    'male': '通常较大较活泼',
+    'female': '通常较小较温柔'
+  };
+  return descriptions[gender] || '不同性别的猫咪';
+} 

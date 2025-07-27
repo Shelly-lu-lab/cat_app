@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 基础样式 */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,27 +9,51 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #fef3c7 0%, #f3e8ff 50%, #fce7f3 100%);
+  min-height: 100vh;
 }
 
-/* 自定义组件样式 */
-.btn-primary {
-  @apply bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors;
+/* 新的设计系统样式 */
+.gradient-text {
+  @apply bg-gradient-to-r from-orange-500 to-purple-600 bg-clip-text text-transparent;
 }
 
-.btn-secondary {
-  @apply bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors;
+.glass-effect {
+  @apply bg-white/80 backdrop-blur-md border border-orange-100;
 }
 
-.card {
-  @apply bg-white rounded-lg shadow-lg p-6;
+.card-hover {
+  @apply transition-all duration-200 hover:scale-105 hover:shadow-xl;
 }
 
-.input-field {
-  @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500;
+.option-card {
+  @apply bg-white rounded-2xl p-6 shadow-lg border-2 transition-all duration-200;
 }
 
-.loading-spinner {
-  @apply animate-spin rounded-full border-2 border-white border-t-transparent;
+.option-card:hover {
+  @apply border-orange-300 shadow-md;
+}
+
+.option-card.selected {
+  @apply border-orange-500 bg-orange-50 text-orange-700;
+}
+
+.generate-button {
+  @apply bg-gradient-to-r from-orange-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl;
+}
+
+.generate-button:disabled {
+  @apply bg-gray-300 text-gray-500 cursor-not-allowed scale-100 shadow-none;
+}
+
+/* 动画效果 */
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
 }
 
 /* 强制下拉菜单样式 */
