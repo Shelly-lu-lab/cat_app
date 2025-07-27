@@ -54,8 +54,7 @@ export const UserDashboard: React.FC = () => {
   };
 
   const handleViewCatDetails = (cat: CatInfo) => {
-    // TODO: 实现猫咪详情页面
-    console.log('查看猫咪详情:', cat.name);
+    navigate(`/cat/${cat.id}`);
   };
 
   if (!user) {

@@ -9,6 +9,7 @@ import { LoginPage } from './components/auth/LoginPage';
 import { UserDashboard } from './components/dashboard/UserDashboard';
 import { CatGenerator } from './components/cat/CatGenerator';
 import { CatNamePage } from './components/cat/CatNamePage';
+import { CatProfile } from './components/cat/CatProfile';
 
 function App() {
   const { user, setUser, isLoading, error, setLoading, setError } = useAppStore();
@@ -86,6 +87,12 @@ function App() {
             path="/cat-name" 
             element={
               user ? <CatNamePage /> : <Navigate to="/login" replace />
+            } 
+          />
+          <Route 
+            path="/cat/:catId" 
+            element={
+              user ? <CatProfile /> : <Navigate to="/login" replace />
             } 
           />
         </Routes>

@@ -87,6 +87,28 @@ export const catService = {
       createdAt: new Date(data.created_at),
       userId: data.user_id
     };
+  },
+
+  // 根据ID获取猫咪详情（返回原始数据）
+  async getCatById(catId: string): Promise<any> {
+    const { data, error } = await supabase
+      .from(TABLES.CATS)
+      .select('*')
+      .eq('id', catId)
+      .single();
+    
+    if (error) throw new Error(`Failed to get cat: ${error.message}`);
+    return data;
+  },
+
+  // 删除猫咪
+  async deleteCat(catId: string): Promise<void> {
+    const { error } = await supabase
+      .from(TABLES.CATS)
+      .delete()
+      .eq('id', catId);
+    
+    if (error) throw new Error(`Failed to delete cat: ${error.message}`);
   }
 };
 
