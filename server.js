@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const fetch = require('node-fetch');
+import express from 'express';
+import cors from 'cors';
+import fetch from 'node-fetch';
 
 const app = express();
 const PORT = 3001;
@@ -19,7 +19,7 @@ app.post('/api/generate-video', async (req, res) => {
     }
 
     // 获取API密钥
-    const apiKey = process.env.DASHSCOPE_API_KEY;
+    const apiKey = process.env.DASHSCOPE_API_KEY || 'sk-4b1c8b1d172c4be09827cdf5f83442e5';
     if (!apiKey) {
       return res.status(500).json({ error: 'API密钥未配置' });
     }
