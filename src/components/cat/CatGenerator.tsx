@@ -50,7 +50,7 @@ export const CatGenerator: React.FC = () => {
       });
       
       // 跳转到命名页面
-      navigate('/cat-name');
+      navigate('/name-cat');
     } catch (error) {
       console.error('生成猫咪图片失败:', error);
       setError(error instanceof Error ? error.message : '生成失败，请稍后重试');
