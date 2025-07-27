@@ -1,20 +1,29 @@
 #!/bin/bash
 
-# AI云养猫项目快速启动脚本
-echo "🚀 启动AI云养猫开发服务器..."
+# 设置环境变量
+export DASHSCOPE_API_KEY="sk-4b1c8b1d172c4be09827cdf5f83442e5"
 
-# 检查是否在正确的目录
-if [ ! -f "package.json" ]; then
-    echo "❌ 错误：请在ai-cat-app目录中运行此脚本"
-    exit 1
-fi
+# 启动代理服务器
+echo "启动代理服务器..."
+node server.js &
+PROXY_PID=$!
 
-# 检查端口是否被占用
-if lsof -Pi :5173 -sTCP:LISTEN -t >/dev/null ; then
-    echo "⚠️  端口5173已被占用，尝试使用其他端口..."
-    npm run dev -- --port 5174
-else
-    echo "✅ 端口5173可用，启动服务器..."
-    # 使用watch模式，文件变化时自动重启
-    npm run dev -- --watch
-fi 
+# 等待代理服务器启动
+sleep 2
+
+# 启动前端开发服务器
+echo "启动前端开发服务器..."
+npm run dev &
+FRONTEND_PID=$!
+
+# 等待用户中断
+echo "开发环境已启动！"
+echo "前端服务器: http://localhost:5173"
+echo "代理服务器: http://localhost:3001"
+echo "按 Ctrl+C 停止所有服务"
+
+# 等待中断信号
+trap "echo '正在停止服务...'; kill $PROXY_PID $FRONTEND_PID; exit" INT
+
+# 等待所有后台进程
+wait 

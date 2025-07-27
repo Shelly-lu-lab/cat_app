@@ -1,109 +1,183 @@
-# AI云养猫
+# Supabase CLI
 
-一个基于AI技术的虚拟宠物养成网页应用，专为移动端用户设计。
+[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
+](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
 
-## 功能特性
+[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
 
-- 🐱 **AI猫咪生成**：选择品种、年龄、性别，生成个性化猫咪
-- 🎬 **AI视频互动**：输入指令，生成猫咪动作视频
-- 👤 **用户系统**：邮箱登录，数据同步
-- 📱 **移动端优化**：响应式设计，触摸友好
-- ☁️ **云端存储**：基于Supabase的数据存储
+This repository contains all the functionality for Supabase CLI.
 
-## 技术栈
+- [x] Running Supabase locally
+- [x] Managing database migrations
+- [x] Creating and deploying Supabase Functions
+- [x] Generating types directly from your database schema
+- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
 
-- **前端**：React 18 + TypeScript + Vite
-- **样式**：Tailwind CSS
-- **状态管理**：Zustand
-- **路由**：React Router v6
-- **后端**：Supabase (数据库 + 认证 + 存储)
-- **AI服务**：通义万相2.1-文生图-Plus + 通义万相2.1-图生视频-Plus
+## Getting started
 
-## 快速开始
+### Install the CLI
 
-### 环境要求
-- Node.js 18+
-- npm 或 yarn
+Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
 
-### 安装依赖
 ```bash
-npm install
+npm i supabase --save-dev
 ```
 
-### 环境配置
-1. 复制 `env.example` 为 `.env.local`
-2. 配置以下环境变量：
-   ```
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   VITE_TONGYI_API_KEY=your_tongyi_api_key
-   ```
+To install the beta release channel:
 
-### 启动开发服务器
 ```bash
-npm run dev
+npm i supabase@beta --save-dev
 ```
 
-### 构建生产版本
+When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
+
+```
+NODE_OPTIONS=--no-experimental-fetch yarn add supabase
+```
+
+> **Note**
+For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
+
+<details>
+  <summary><b>macOS</b></summary>
+
+  Available via [Homebrew](https://brew.sh). To install:
+
+  ```sh
+  brew install supabase/tap/supabase
+  ```
+
+  To install the beta release channel:
+  
+  ```sh
+  brew install supabase/tap/supabase-beta
+  brew link --overwrite supabase-beta
+  ```
+  
+  To upgrade:
+
+  ```sh
+  brew upgrade supabase
+  ```
+</details>
+
+<details>
+  <summary><b>Windows</b></summary>
+
+  Available via [Scoop](https://scoop.sh). To install:
+
+  ```powershell
+  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+  scoop install supabase
+  ```
+
+  To upgrade:
+
+  ```powershell
+  scoop update supabase
+  ```
+</details>
+
+<details>
+  <summary><b>Linux</b></summary>
+
+  Available via [Homebrew](https://brew.sh) and Linux packages.
+
+  #### via Homebrew
+
+  To install:
+
+  ```sh
+  brew install supabase/tap/supabase
+  ```
+
+  To upgrade:
+
+  ```sh
+  brew upgrade supabase
+  ```
+
+  #### via Linux packages
+
+  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
+
+  ```sh
+  sudo apk add --allow-untrusted <...>.apk
+  ```
+
+  ```sh
+  sudo dpkg -i <...>.deb
+  ```
+
+  ```sh
+  sudo rpm -i <...>.rpm
+  ```
+
+  ```sh
+  sudo pacman -U <...>.pkg.tar.zst
+  ```
+</details>
+
+<details>
+  <summary><b>Other Platforms</b></summary>
+
+  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
+
+  ```sh
+  go install github.com/supabase/cli@latest
+  ```
+
+  Add a symlink to the binary in `$PATH` for easier access:
+
+  ```sh
+  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
+  ```
+
+  This works on other non-standard Linux distros.
+</details>
+
+<details>
+  <summary><b>Community Maintained Packages</b></summary>
+
+  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
+  To install in your working directory:
+
+  ```bash
+  pkgx install supabase
+  ```
+
+  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
+</details>
+
+### Run the CLI
+
 ```bash
-npm run build
+supabase bootstrap
 ```
 
-## 项目结构
+Or using npx:
 
-```
-src/
-├── components/          # 可复用组件
-│   ├── ui/             # 基础UI组件
-│   ├── auth/           # 认证相关组件
-│   ├── cat/            # 猫咪相关组件
-│   └── video/          # 视频相关组件
-├── pages/              # 页面组件
-├── hooks/              # 自定义Hooks
-├── services/           # API服务
-│   ├── ai/             # AI服务（通义万相）
-│   ├── supabase/       # Supabase服务
-│   └── storage/        # 存储服务
-├── stores/             # 状态管理
-├── types/              # TypeScript类型定义
-├── utils/              # 工具函数
-└── styles/             # 样式文件
+```bash
+npx supabase bootstrap
 ```
 
-## 开发计划
+The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
 
-### 第一阶段：项目初始化 ✅
-- [x] 项目基础架构搭建
-- [x] 移动端优化配置
-- [x] 基础组件开发
+## Docs
 
-### 第二阶段：用户认证
-- [ ] Supabase Auth集成
-- [ ] 登录/注册页面
-- [ ] 路由保护
+Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
 
-### 第三阶段：猫咪生成
-- [ ] 通义万相API集成
-- [ ] 猫咪选择界面
-- [ ] 图片生成功能
+## Breaking changes
 
-### 第四阶段：视频互动
-- [ ] 视频生成API
-- [ ] 指令输入界面
-- [ ] 视频播放功能
+We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
 
-## 贡献指南
+However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
 
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开 Pull Request
+## Developing
 
-## 许可证
+To run from source:
 
-MIT License
-
-## 联系方式
-
-如有问题或建议，请提交 Issue 或联系开发团队。
+```sh
+# Go >= 1.22
+go run . help
+```

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../stores/appStore';
 import { catService } from '../../services/supabase/database';
+import { tongyiVideoService } from '../../services/ai/tongyi-video';
 import { 
   HeartIcon, 
   VideoCameraIcon,
@@ -52,22 +53,34 @@ export const InteractCat: React.FC<InteractCatProps> = () => {
     setIsGenerating(true);
     
     try {
-      // TODO: 实现视频生成API调用
-      // 这里先模拟视频生成
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      console.log('开始生成视频:', { command, catImageUrl: cat.image_url });
       
-      const newVideo = {
-        id: Date.now(),
-        command: command,
-        videoUrl: 'https://example.com/video.mp4', // 实际应该是生成的视频URL
-        thumbnailUrl: cat.image_url,
-        createdAt: new Date()
-      };
+      // 调用通义万相视频生成API
+      const result = await tongyiVideoService.generateVideo({
+        imageUrl: cat.image_url,
+        prompt: command,
+        duration: 3
+      });
       
-      setGeneratedVideos(prev => [newVideo, ...prev]);
-      setCommand('');
+      if (result.status === 'completed' && result.videoUrl) {
+        console.log('视频生成成功:', result.videoUrl);
+        
+        const newVideo = {
+          id: Date.now(),
+          command: command,
+          videoUrl: result.videoUrl,
+          thumbnailUrl: cat.image_url,
+          createdAt: new Date()
+        };
+        
+        setGeneratedVideos(prev => [newVideo, ...prev]);
+        setCommand('');
+      } else {
+        throw new Error(result.error || '视频生成失败');
+      }
     } catch (error) {
-      console.error('Failed to generate video:', error);
+      console.error('视频生成失败:', error);
+      // 可以在这里添加错误提示
     } finally {
       setIsGenerating(false);
     }
