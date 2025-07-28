@@ -779,7 +779,7 @@ async function generateVideo(apiKey, config) {
       },
       parameters: {
         fps: 8,
-        resolution: '720P'
+        resolution: '1024*1024'  // 与图片尺寸保持一致
       }
     };
 
