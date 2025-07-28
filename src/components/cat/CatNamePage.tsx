@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../stores/appStore';
 import { catService } from '../../services/supabase/database';
+import { storageService } from '../../services/supabase/storage';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { ErrorMessage } from '../ui/ErrorMessage';
 import { Header } from '../ui/Header';
@@ -61,7 +62,7 @@ export const CatNamePage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // 更新猫咪信息
+      // 更新猫咪信息（图片已经是Supabase Storage的URL）
       const updatedCat = {
         ...currentCat,
         name: catName.trim(),
@@ -158,6 +159,11 @@ export const CatNamePage: React.FC = () => {
                 src={currentCat.imageUrl}
                 alt="生成的猫咪"
                 className="w-full aspect-square object-cover"
+                onError={(e) => {
+                  console.error('图片加载失败:', e);
+                  // 如果图片加载失败，使用备用图片
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=512&h=512&fit=crop';
+                }}
               />
             </div>
             

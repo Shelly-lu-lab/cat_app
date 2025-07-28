@@ -15,8 +15,9 @@
   "dependencies": {
     "@headlessui/react": "^2.0.0",
     "@heroicons/react": "^2.2.0",
-    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/supabase-js": "^2.52.1",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",

@@ -49,22 +49,42 @@ export const catService = {
 
   // 获取用户的所有猫咪
   async getUserCats(userId: string): Promise<CatInfo[]> {
+    console.log('开始获取用户猫咪，用户ID:', userId);
+    
     const { data, error } = await supabase
       .from(TABLES.CATS)
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
     
-    if (error) throw new Error(`Failed to fetch cats: ${error.message}`);
+    if (error) {
+      console.error('获取猫咪数据失败:', error);
+      throw new Error(`Failed to fetch cats: ${error.message}`);
+    }
     
-    return (data || []).map(cat => ({
-      id: cat.id,
-      name: cat.name,
-      imageUrl: cat.image_url,
-      config: cat.config,
-      createdAt: new Date(cat.created_at),
-      userId: cat.user_id
-    }));
+    console.log('从数据库获取的原始数据:', data);
+    
+    const mappedCats = (data || []).map(cat => {
+      console.log('处理猫咪数据:', cat);
+      
+      // 检查必要字段是否存在
+      if (!cat.id || !cat.name || !cat.image_url) {
+        console.warn('猫咪数据不完整:', cat);
+        return null;
+      }
+      
+      return {
+        id: cat.id,
+        name: cat.name,
+        imageUrl: cat.image_url,
+        config: cat.config || {},
+        createdAt: new Date(cat.created_at),
+        userId: cat.user_id
+      };
+    }).filter(cat => cat !== null); // 过滤掉空数据
+    
+    console.log('映射后的猫咪数据:', mappedCats);
+    return mappedCats;
   },
 
   // 获取单个猫咪

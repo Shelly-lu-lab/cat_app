@@ -7,29 +7,15 @@ interface TongyiImageResponse {
 }
 
 export class TongyiImageService {
-  private supabaseUrl: string;
-  private supabaseAnonKey: string;
-
-  constructor() {
-    this.supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-    this.supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-  }
-
-  // 通过Supabase Edge Function调用真实API
+  // 通过本地代理服务器调用真实API
   async generateCatImage(config: CatConfig): Promise<string> {
     console.log('生成猫咪图片:', config);
-    
-    if (!this.supabaseUrl || !this.supabaseAnonKey) {
-      throw new Error('Supabase配置缺失，请检查环境变量');
-    }
-    
     try {
       const response = await fetch(
-        `${this.supabaseUrl}/functions/v1/generate-cat-image`,
+        'http://localhost:3001/api/generate-image',
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${this.supabaseAnonKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -46,11 +32,9 @@ export class TongyiImageService {
       }
 
       const result: TongyiImageResponse = await response.json();
-      
       if (!result.success) {
         throw new Error(result.error || '图片生成失败');
       }
-
       console.log('猫咪图片生成成功:', result.imageUrl);
       return result.imageUrl!;
     } catch (error) {
@@ -68,13 +52,11 @@ export class TongyiImageService {
       'maine-coon': '缅因猫',
       'ragdoll': '布偶猫'
     };
-
     const ageMap: Record<string, string> = {
       'kitten': '幼猫',
       'adult': '成年猫',
       'senior': '老年猫'
     };
-
     const genderMap: Record<string, string> = {
       'male': '公猫',
       'female': '母猫'

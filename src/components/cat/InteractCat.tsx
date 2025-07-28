@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../stores/appStore';
 import { catService } from '../../services/supabase/database';
+import { storageService } from '../../services/supabase/storage';
 import { tongyiVideoService } from '../../services/ai/tongyi-video';
 import { 
   HeartIcon, 
@@ -65,10 +66,18 @@ export const InteractCat: React.FC<InteractCatProps> = () => {
       if (result.status === 'completed' && result.videoUrl) {
         console.log('视频生成成功:', result.videoUrl);
         
+        // 上传视频到Supabase Storage
+        const timestamp = Date.now();
+        const fileName = `video_${catId}_${timestamp}.mp4`;
+        
+        console.log('开始上传视频到Supabase Storage');
+        const uploadedVideoUrl = await storageService.uploadVideo(result.videoUrl, fileName);
+        console.log('视频上传成功:', uploadedVideoUrl);
+        
         const newVideo = {
           id: Date.now(),
           command: command,
-          videoUrl: result.videoUrl,
+          videoUrl: uploadedVideoUrl, // 使用上传后的URL
           thumbnailUrl: cat.image_url,
           createdAt: new Date()
         };
@@ -257,16 +266,22 @@ export const InteractCat: React.FC<InteractCatProps> = () => {
               {generatedVideos.map((video) => (
                 <div key={video.id} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-100 group">
                   <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
-                    <img 
-                      src={video.thumbnailUrl} 
-                      alt={video.command}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
-                      <button className="w-12 h-12 text-white bg-black/50 rounded-full p-3 group-hover:bg-black/70 transition-all duration-300">
-                        <PlayIcon className="w-6 h-6" />
-                      </button>
-                    </div>
+                    {video.videoUrl ? (
+                      <video 
+                        src={video.videoUrl}
+                        controls
+                        className="w-full h-full object-cover"
+                        poster={video.thumbnailUrl}
+                      >
+                        您的浏览器不支持视频播放
+                      </video>
+                    ) : (
+                      <img 
+                        src={video.thumbnailUrl} 
+                        alt={video.command}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
                   <div className="text-sm text-gray-700">
                     <p className="font-medium mb-1">"{video.command}"</p>

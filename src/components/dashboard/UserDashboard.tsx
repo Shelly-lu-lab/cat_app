@@ -24,8 +24,22 @@ export const UserDashboard: React.FC = () => {
     
     try {
       setIsLoadingCats(true);
+      console.log('开始加载用户猫咪，用户:', user);
+      
       const userCats = await catService.getUserCats(user.id);
-      setCats(userCats);
+      console.log('加载到的猫咪数据:', userCats);
+      
+      // 验证数据完整性
+      const validCats = userCats.filter(cat => {
+        const isValid = cat && cat.id && cat.name && cat.imageUrl;
+        if (!isValid) {
+          console.warn('发现无效的猫咪数据:', cat);
+        }
+        return isValid;
+      });
+      
+      console.log('过滤后的有效猫咪数据:', validCats);
+      setCats(validCats);
     } catch (error) {
       console.error('Failed to load cats:', error);
       setError('加载猫咪列表失败');
@@ -89,12 +103,20 @@ export const UserDashboard: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               我的猫咪们
             </h2>
-            <button 
-              onClick={handleGenerateCat}
-              className="bg-gradient-to-r from-orange-500 to-purple-600 text-white px-6 py-3 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              + 领养新猫咪
-            </button>
+            <div className="flex space-x-2">
+              <button 
+                onClick={loadUserCats}
+                className="px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-full text-sm hover:border-gray-400 transition-all duration-300"
+              >
+                🔄 刷新
+              </button>
+              <button 
+                onClick={handleGenerateCat}
+                className="bg-gradient-to-r from-orange-500 to-purple-600 text-white px-6 py-3 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                + 领养新猫咪
+              </button>
+            </div>
           </div>
 
           {isLoadingCats ? (
@@ -122,9 +144,18 @@ export const UserDashboard: React.FC = () => {
               {cats.map((cat) => (
                 <div key={cat.id} className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-all duration-300">
                   <img
-                    src={cat.imageUrl}
+                    src={`${cat.imageUrl}?t=${Date.now()}`}
                     alt={cat.name}
                     className="w-full h-48 object-cover rounded-lg mb-3"
+                    onError={(e) => {
+                      console.log('图片加载失败:', cat.imageUrl);
+                      console.log('猫咪信息:', cat);
+                      // 如果图片加载失败，可以设置一个默认图片
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=300&fit=crop';
+                    }}
+                    onLoad={() => {
+                      console.log('图片加载成功:', cat.imageUrl);
+                    }}
                   />
                   <h3 className="font-semibold text-lg mb-1">{cat.name}</h3>
                   <p className="text-sm text-gray-600 mb-2">
