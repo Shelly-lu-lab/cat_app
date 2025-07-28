@@ -270,7 +270,7 @@ export const InteractCat: React.FC<InteractCatProps> = () => {
                       <video 
                         src={video.videoUrl}
                         controls
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                         poster={video.thumbnailUrl}
                       >
                         您的浏览器不支持视频播放
@@ -279,7 +279,7 @@ export const InteractCat: React.FC<InteractCatProps> = () => {
                       <img 
                         src={video.thumbnailUrl} 
                         alt={video.command}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     )}
                   </div>
