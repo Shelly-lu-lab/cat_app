@@ -376,7 +376,7 @@ async function queryTaskStatus(apiKey, taskId) {
  * 构建视频生成提示词
  */
 function buildVideoPrompt(action) {
-  return `一只可爱的猫咪正在${action}，动作自然流畅，画面温馨，高清画质，背景简洁，只有一只猫咪，动作连贯，表情生动`;
+  return `一只可爱的猫咪正在${action}，全身照，完整展示猫咪的身体和脸部，动作自然流畅，画面温馨，高清画质，背景简洁，只有一只猫咪，动作连贯，表情生动，姿态自然`;
 }
 
 /**
@@ -525,7 +525,7 @@ function buildImagePrompt(breed, age, gender) {
   const ageLabel = ageMap[age] || age;
   const genderLabel = genderMap[gender] || gender;
 
-  return `一只${ageLabel}的${genderLabel}${breedLabel}，高清写实风格，干净背景，毛发细节丰富，自然光线，专业摄影风格，4K超高清`;
+  return `一只${ageLabel}的${genderLabel}${breedLabel}，全身照，完整展示猫咪的身体和脸部，高清写实风格，干净背景，毛发细节丰富，自然光线，专业摄影风格，4K超高清，猫咪姿态自然，表情生动`;
 }
 
 /**
