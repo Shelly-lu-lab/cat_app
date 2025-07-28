@@ -28,8 +28,8 @@ function App() {
       <div className="App">
         <Routes>
           {/* 公开路由 */}
-          <Route path="/" element={user ? <Navigate to="/dashboard" /> : <HomePage />} />
-          <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
+          <Route path="/" element={user ? <Navigate to="/generate" /> : <HomePage />} />
+          <Route path="/login" element={user ? <Navigate to="/generate" /> : <LoginPage />} />
           
           {/* 需要认证的路由 */}
           <Route path="/dashboard" element={user ? <UserDashboard /> : <Navigate to="/login" />} />

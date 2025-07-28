@@ -263,6 +263,13 @@ export const CatProfile: React.FC<CatProfileProps> = () => {
                     删除猫咪
                   </button>
                 </div>
+                
+                <button 
+                  onClick={() => navigate('/generate')}
+                  className="w-full bg-gradient-to-r from-orange-500 to-purple-600 text-white py-3 px-6 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  + 领养新猫咪
+                </button>
               </div>
             </div>
           </div>

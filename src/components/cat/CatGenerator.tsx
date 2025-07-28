@@ -223,15 +223,7 @@ export const CatGenerator: React.FC = () => {
           </p>
         </div>
 
-        {/* 返回按钮 */}
-        <div className="text-center mt-8">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="text-orange-600 hover:text-orange-700 font-medium transition-colors"
-          >
-            ← 返回仪表板
-          </button>
-        </div>
+
       </main>
     </div>
   );

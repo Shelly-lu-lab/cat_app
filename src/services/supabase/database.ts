@@ -31,8 +31,8 @@ export const userService = {
 // 猫咪相关操作
 export const catService = {
   // 保存猫咪信息
-  async saveCat(cat: CatInfo): Promise<void> {
-    const { error } = await supabase
+  async saveCat(cat: CatInfo): Promise<CatInfo> {
+    const { data, error } = await supabase
       .from(TABLES.CATS)
       .insert({
         user_id: cat.userId,
@@ -42,9 +42,22 @@ export const catService = {
         gender: cat.config.gender,
         image_url: cat.imageUrl,
         config: cat.config
-      });
+      })
+      .select()
+      .single();
     
     if (error) throw new Error(`Failed to save cat: ${error.message}`);
+    
+    if (!data) throw new Error('Failed to save cat: No data returned');
+    
+    return {
+      id: data.id,
+      name: data.name,
+      imageUrl: data.image_url,
+      config: data.config,
+      createdAt: new Date(data.created_at),
+      userId: data.user_id
+    };
   },
 
   // 获取用户的所有猫咪

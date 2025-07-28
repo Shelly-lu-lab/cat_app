@@ -70,13 +70,13 @@ export const CatNamePage: React.FC = () => {
       };
 
       // 保存到数据库
-      await catService.saveCat(updatedCat);
+      const savedCat = await catService.saveCat(updatedCat);
 
       // 更新状态
-      setCurrentCat(updatedCat);
+      setCurrentCat(savedCat);
 
-      // 跳转到仪表板
-      navigate('/dashboard');
+      // 直接跳转到猫咪详情页
+      navigate(`/cat/${savedCat.id}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '保存猫咪失败';
       setError(errorMessage);
