@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../stores/appStore';
 import { catService } from '../../services/supabase/database';
@@ -14,6 +14,55 @@ import {
 } from '@heroicons/react/24/outline';
 
 interface InteractCatProps {}
+
+// 响应式视频组件
+const ResponsiveVideo: React.FC<{ 
+  videoUrl: string; 
+  posterUrl?: string; 
+  alt?: string;
+}> = ({ videoUrl, posterUrl, alt }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [aspectRatio, setAspectRatio] = useState<number>(1); // 默认1:1比例
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      const handleLoadedMetadata = () => {
+        const ratio = video.videoWidth / video.videoHeight;
+        setAspectRatio(ratio);
+      };
+
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      return () => {
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      };
+    }
+  }, [videoUrl]);
+
+  return (
+    <div 
+      className="relative w-full rounded-lg overflow-hidden bg-black"
+      style={{ 
+        aspectRatio: `${aspectRatio}`,
+        maxHeight: '70vh' // 限制最大高度为视口高度的70%
+      }}
+    >
+      <video 
+        ref={videoRef}
+        src={videoUrl}
+        controls
+        className="w-full h-full object-contain"
+        poster={posterUrl}
+        style={{
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        您的浏览器不支持视频播放
+      </video>
+    </div>
+  );
+};
 
 export const InteractCat: React.FC<InteractCatProps> = () => {
   const { catId } = useParams<{ catId: string }>();
@@ -262,25 +311,25 @@ export const InteractCat: React.FC<InteractCatProps> = () => {
         {generatedVideos.length > 0 && (
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">视频历史</h3>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-6">
               {generatedVideos.map((video) => (
                 <div key={video.id} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-100 group">
-                  <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
+                  {/* 响应式视频容器 - 宽度100%，高度根据视频比例自动调整 */}
+                  <div className="mb-3">
                     {video.videoUrl ? (
-                      <video 
-                        src={video.videoUrl}
-                        controls
-                        className="w-full h-full object-contain"
-                        poster={video.thumbnailUrl}
-                      >
-                        您的浏览器不支持视频播放
-                      </video>
-                    ) : (
-                      <img 
-                        src={video.thumbnailUrl} 
+                      <ResponsiveVideo 
+                        videoUrl={video.videoUrl}
+                        posterUrl={video.thumbnailUrl}
                         alt={video.command}
-                        className="w-full h-full object-contain"
                       />
+                    ) : (
+                      <div className="relative w-full rounded-lg overflow-hidden bg-gray-100" style={{ aspectRatio: '1/1' }}>
+                        <img 
+                          src={video.thumbnailUrl} 
+                          alt={video.command}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
                     )}
                   </div>
                   <div className="text-sm text-gray-700">
