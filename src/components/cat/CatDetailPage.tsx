@@ -533,9 +533,9 @@ export const CatDetailPage: React.FC<CatDetailPageProps> = () => {
             {videoHistory.length > 0 && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-lg font-semibold text-gray-800">视频历史记录</h4>
+                  <h4 className="text-lg font-semibold text-gray-800">互动记录</h4>
                   <span className="text-sm text-gray-500">
-                    共 {videoHistory.length} 个视频
+                    共 {videoHistory.length} 个互动
                   </span>
                 </div>
                 <div className="space-y-4">
