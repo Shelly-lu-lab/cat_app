@@ -143,20 +143,31 @@ export const UserDashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {cats.map((cat) => (
                 <div key={cat.id} className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-all duration-300">
-                  <img
-                    src={`${cat.imageUrl}?t=${Date.now()}`}
-                    alt={cat.name}
-                    className="w-full h-48 object-cover rounded-lg mb-3"
-                    onError={(e) => {
-                      console.log('图片加载失败:', cat.imageUrl);
-                      console.log('猫咪信息:', cat);
-                      // 如果图片加载失败，可以设置一个默认图片
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=300&fit=crop';
-                    }}
-                    onLoad={() => {
-                      console.log('图片加载成功:', cat.imageUrl);
-                    }}
-                  />
+                  <div className="relative w-full h-48 mb-3">
+                    <img
+                      src={cat.imageUrl}
+                      alt={cat.name}
+                      className="w-full h-48 object-cover rounded-lg"
+                      onError={(e) => {
+                        console.log('图片加载失败，猫咪ID:', cat.id);
+                        console.log('图片URL:', cat.imageUrl);
+                        console.log('猫咪信息:', cat);
+                        // 如果图片加载失败，使用默认猫咪图片
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=300&fit=crop';
+                        e.currentTarget.onerror = null; // 防止无限循环
+                      }}
+                      onLoad={() => {
+                        console.log('图片加载成功，猫咪ID:', cat.id);
+                        console.log('图片URL:', cat.imageUrl);
+                      }}
+                      loading="lazy"
+                    />
+                    {/* 图片加载状态指示器 */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg opacity-0 transition-opacity duration-300" 
+                         id={`loading-${cat.id}`}>
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                    </div>
+                  </div>
                   <h3 className="font-semibold text-lg mb-1">{cat.name}</h3>
                   <p className="text-sm text-gray-600 mb-2">
                     {cat.config.breed} • {cat.config.age} • {cat.config.gender}

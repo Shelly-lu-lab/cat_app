@@ -483,11 +483,16 @@ app.post('/api/generate-image', async (req, res) => {
     console.log('开始调用通义万相API，提示词:', prompt);
 
     // 生成图片
-    const imageUrl = await generateImage(apiKey, prompt);
-    console.log('猫咪图片生成成功:', imageUrl);
+    const originalImageUrl = await generateImage(apiKey, prompt);
+    console.log('猫咪图片生成成功:', originalImageUrl);
     
-    // 直接返回通义万相的OSS URL，跳过Supabase上传
-    res.json({ success: true, imageUrl: imageUrl });
+    // 立即上传到Supabase Storage，确保图片URL持久化
+    const fileName = `cat_${Date.now()}.png`;
+    const persistentImageUrl = await uploadImageToSupabase(originalImageUrl, fileName);
+    console.log('图片已上传到Supabase Storage:', persistentImageUrl);
+    
+    // 返回持久化的URL
+    res.json({ success: true, imageUrl: persistentImageUrl });
   } catch (error) {
     console.error('图片生成失败:', error);
     res.status(500).json({ 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../stores/appStore';
 import { tongyiImageService } from '../../services/ai/tongyi-image';
+import { storageService } from '../../services/supabase/storage';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { ErrorMessage } from '../ui/ErrorMessage';
 import { Header } from '../ui/Header';
@@ -73,15 +74,21 @@ export const CatGenerator: React.FC = () => {
       console.log('开始生成猫咪图片:', config);
       
       // 调用真实API生成猫咪图片
-      const imageUrl = await tongyiImageService.generateCatImage(config);
+      const originalImageUrl = await tongyiImageService.generateCatImage(config);
       
-      console.log('猫咪图片生成成功:', imageUrl);
+      console.log('猫咪图片生成成功:', originalImageUrl);
       
-      // 保存到全局状态
+      // 立即上传到Supabase Storage，确保图片URL持久化
+      const fileName = `cat_${Date.now()}.png`;
+      const persistentImageUrl = await storageService.uploadImage(originalImageUrl, fileName);
+      
+      console.log('图片已上传到Supabase Storage:', persistentImageUrl);
+      
+      // 保存到全局状态（使用持久化的URL）
       setCurrentCat({
         id: Date.now().toString(),
         name: '',
-        imageUrl,
+        imageUrl: persistentImageUrl, // 使用持久化的URL
         config,
         createdAt: new Date(),
         userId: undefined

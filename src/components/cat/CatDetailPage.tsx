@@ -194,11 +194,26 @@ export const CatDetailPage: React.FC<CatDetailPageProps> = () => {
     setVideoHistory(prev => [newVideoItem, ...prev.slice(0, 9)]);
     
     try {
+      // 调试信息：检查图片URL
+      console.log('开始生成视频，猫咪信息:', {
+        catId: cat.id,
+        catName: cat.name,
+        imageUrl: cat.image_url,
+        prompt: interactionInput
+      });
+      
+      // 验证图片URL是否可访问
+      if (!cat.image_url) {
+        throw new Error('猫咪图片URL不存在，无法生成视频');
+      }
+      
       const result = await tongyiVideoService.generateVideo({
         imageUrl: cat.image_url,
         prompt: interactionInput,
         duration: 3
       });
+      
+      console.log('视频生成结果:', result);
       
       if (result.status === 'completed' && result.videoUrl) {
         // 更新视频历史记录项
@@ -225,6 +240,7 @@ export const CatDetailPage: React.FC<CatDetailPageProps> = () => {
         setVideoError('视频生成状态异常');
       }
     } catch (err: any) {
+      console.error('视频生成失败:', err);
       // 更新错误状态
       setVideoHistory(prev => prev.map(item => 
         item.id === newVideoId 
