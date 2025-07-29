@@ -6,8 +6,7 @@ import { LoginPage } from './components/auth/LoginPage';
 import { UserDashboard } from './components/dashboard/UserDashboard';
 import { CatGenerator } from './components/cat/CatGenerator';
 import { CatNamePage } from './components/cat/CatNamePage';
-import { CatProfile } from './components/cat/CatProfile';
-import { InteractCat } from './components/cat/InteractCat';
+import { CatDetailPage } from './components/cat/CatDetailPage';
 
 function App() {
   const { user, isLoading } = useAppStore();
@@ -35,8 +34,7 @@ function App() {
           <Route path="/dashboard" element={user ? <UserDashboard /> : <Navigate to="/login" />} />
           <Route path="/generate" element={user ? <CatGenerator /> : <Navigate to="/login" />} />
           <Route path="/name-cat" element={user ? <CatNamePage /> : <Navigate to="/login" />} />
-          <Route path="/cat/:catId" element={user ? <CatProfile /> : <Navigate to="/login" />} />
-          <Route path="/interact/:catId" element={user ? <InteractCat /> : <Navigate to="/login" />} />
+          <Route path="/cat/:catId" element={user ? <CatDetailPage /> : <Navigate to="/login" />} />
           
           {/* 默认重定向 */}
           <Route path="*" element={<Navigate to="/" />} />
