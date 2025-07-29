@@ -4,8 +4,6 @@ import { useAppStore } from '../../stores/appStore';
 import { catService } from '../../services/supabase/database';
 import { 
   HeartIcon, 
-  PencilIcon, 
-  TrashIcon, 
   PlayIcon,
   StarIcon,
   InformationCircleIcon
@@ -20,7 +18,6 @@ export const CatProfile: React.FC<CatProfileProps> = () => {
   const [cat, setCat] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // 获取猫咪信息
   React.useEffect(() => {
@@ -37,17 +34,7 @@ export const CatProfile: React.FC<CatProfileProps> = () => {
     }
   }, [catId]);
 
-  // 删除猫咪
-  const handleDeleteCat = async () => {
-    if (!catId) return;
-    
-    try {
-      await catService.deleteCat(catId);
-      navigate('/dashboard');
-    } catch (err) {
-      setError('删除失败，请重试');
-    }
-  };
+
 
   // 计算性格指数
   const calculatePersonalityStats = (cat: any) => {
@@ -238,35 +225,17 @@ export const CatProfile: React.FC<CatProfileProps> = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <button 
                   onClick={() => navigate(`/interact/${catId}`)}
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-3 px-6 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 px-6 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl text-lg"
                 >
                   与猫咪互动
                 </button>
                 
-                <div className="flex space-x-3">
-                  <button 
-                    onClick={() => navigate(`/edit/${catId}`)}
-                    className="flex-1 flex items-center justify-center py-2 px-4 border-2 border-gray-300 text-gray-700 rounded-full hover:border-purple-300 hover:text-purple-700 transition-all duration-300"
-                  >
-                    <PencilIcon className="w-4 h-4 mr-2" />
-                    编辑信息
-                  </button>
-                  
-                  <button 
-                    onClick={() => setShowDeleteConfirm(true)}
-                    className="flex-1 flex items-center justify-center py-2 px-4 border-2 border-red-300 text-red-700 rounded-full hover:border-red-400 hover:text-red-800 transition-all duration-300"
-                  >
-                    <TrashIcon className="w-4 h-4 mr-2" />
-                    删除猫咪
-                  </button>
-                </div>
-                
                 <button 
                   onClick={() => navigate('/generate')}
-                  className="w-full bg-gradient-to-r from-orange-500 to-purple-600 text-white py-3 px-6 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="w-full bg-gradient-to-r from-orange-500 to-purple-600 text-white py-4 px-6 rounded-full font-medium hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-xl text-lg"
                 >
                   + 领养新猫咪
                 </button>
@@ -276,29 +245,7 @@ export const CatProfile: React.FC<CatProfileProps> = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">确认删除</h3>
-            <p className="text-gray-600 mb-6">确定要删除 {cat.name} 吗？此操作无法撤销。</p>
-            <div className="flex space-x-3">
-              <button 
-                onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-2 px-4 border-2 border-gray-300 text-gray-700 rounded-full hover:border-gray-400 transition-all duration-300"
-              >
-                取消
-              </button>
-              <button 
-                onClick={handleDeleteCat}
-                className="flex-1 py-2 px-4 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300"
-              >
-                确认删除
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }; 

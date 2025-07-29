@@ -8,6 +8,44 @@ import { Header } from '../ui/Header';
 import { CAT_BREEDS, CAT_AGES, CAT_GENDERS } from '../../types';
 import type { CatConfig } from '../../types';
 
+// 简笔画猫咪头SVG组件
+const CatLogo: React.FC<{ className?: string }> = ({ className = "w-16 h-16" }) => (
+  <svg 
+    className={className} 
+    viewBox="0 0 100 100" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* 猫咪头部轮廓 - 使用与背景融合的颜色 */}
+    <ellipse cx="50" cy="55" rx="35" ry="30" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="2"/>
+    
+    {/* 猫咪耳朵 */}
+    <path d="M25 35 L35 15 L45 35 Z" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="1.5"/>
+    <path d="M55 35 L65 15 L75 35 Z" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="1.5"/>
+    
+    {/* 猫咪眼睛 */}
+    <circle cx="40" cy="50" r="4" fill="#1F2937"/>
+    <circle cx="60" cy="50" r="4" fill="#1F2937"/>
+    <circle cx="42" cy="48" r="1.5" fill="#FFFFFF"/>
+    <circle cx="62" cy="48" r="1.5" fill="#FFFFFF"/>
+    
+    {/* 猫咪鼻子 */}
+    <path d="M50 58 L48 62 L52 62 Z" fill="#F59E0B"/>
+    
+    {/* 猫咪嘴巴 */}
+    <path d="M45 65 Q50 68 55 65" stroke="#1F2937" strokeWidth="1.5" fill="none"/>
+    
+    {/* 猫咪胡须 */}
+    <line x1="20" y1="55" x2="35" y2="53" stroke="#1F2937" strokeWidth="1"/>
+    <line x1="20" y1="58" x2="35" y2="58" stroke="#1F2937" strokeWidth="1"/>
+    <line x1="20" y1="61" x2="35" y2="63" stroke="#1F2937" strokeWidth="1"/>
+    
+    <line x1="80" y1="55" x2="65" y2="53" stroke="#1F2937" strokeWidth="1"/>
+    <line x1="80" y1="58" x2="65" y2="58" stroke="#1F2937" strokeWidth="1"/>
+    <line x1="80" y1="61" x2="65" y2="63" stroke="#1F2937" strokeWidth="1"/>
+  </svg>
+);
+
 export const CatGenerator: React.FC = () => {
   const navigate = useNavigate();
   const { setCurrentCat, setLoading, setError, clearError, error } = useAppStore();
@@ -68,10 +106,8 @@ export const CatGenerator: React.FC = () => {
         {/* 页面标题区域 */}
         <div className="text-center mb-12">
           <div className="flex justify-center items-center mb-6">
-            <div className="w-16 h-16 text-orange-500 relative">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-              </svg>
+            <div className="relative">
+              <CatLogo className="w-16 h-16" />
               <div className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400 animate-sparkle">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>

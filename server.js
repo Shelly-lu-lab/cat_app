@@ -525,7 +525,7 @@ function buildImagePrompt(breed, age, gender) {
   const ageLabel = ageMap[age] || age;
   const genderLabel = genderMap[gender] || gender;
 
-  return `一只${ageLabel}的${genderLabel}${breedLabel}，全身照，完整展示猫咪的身体和脸部，高清写实风格，干净背景，毛发细节丰富，自然光线，专业摄影风格，4K超高清，猫咪姿态自然，表情生动`;
+  return `一只${ageLabel}的${genderLabel}${breedLabel}，生成猫咪的全身像，包含整个身体和面部，完整展示猫咪的身体和脸部，高清写实风格，干净背景，毛发细节丰富，自然光线，专业摄影风格，4K超高清，猫咪姿态自然，表情生动`;
 }
 
 /**
